@@ -15,7 +15,7 @@
                                 <label for="title" class="col-md-4 col-form-label text-md-right">タイトル</label>
 
                                 <div class="col-md-6">
-                                    <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" required autocomplete="title" autofocus>
+                                    <input id="title" type="text" class="form-control @error('title') is-invalid @enderror" name="title" value="{{ old('title') }}" autocomplete="title" autofocus>
 
                                     @error('title')
                                     <span class="invalid-feedback" role="alert">
@@ -29,7 +29,7 @@
                                 <label for="body" class="col-md-4 col-form-label text-md-right">本文</label>
 
                                 <div class="col-md-6">
-                                    <textarea id="body" class="form-control @error('body') is-invalid @enderror" name="body" value="{{ old('body') }}" required autocomplete="body">
+                                    <textarea id="body" class="form-control @error('body') is-invalid @enderror" name="body" value="{{ old('body') }}" autocomplete="body"></textarea>
 
                                     @error('body')
                                     <span class="invalid-feedback" role="alert">
