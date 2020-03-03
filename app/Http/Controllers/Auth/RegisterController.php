@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\DataAccess\Eloquent\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRegisterRequest;
 use App\Providers\RouteServiceProvider;
-use Illuminate\Auth\Events\Registered;
+use App\Services\UserService;
+use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Foundation\Auth\RegistersUsers;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -32,38 +30,28 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
+    /**
+     * @var Guard
+     */
+    private $auth;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Guard $auth)
     {
         $this->middleware('guest');
+        $this->auth = $auth;
     }
 
-    public function register(UserRegisterRequest $request)
+    public function register(UserRegisterRequest $request, UserService $userService)
     {
-        event(new Registered($user = $this->create($request->all())));
+        $user = $userService->registerUser($request->validated());
 
-        $this->guard()->login($user);
+        $this->auth->login($user);
 
         return redirect($this->redirectTo);
-    }
-
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param array $data
-     * @return \App\DataAccess\Eloquent\User
-     */
-    protected function create(array $data)
-    {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
     }
 }
